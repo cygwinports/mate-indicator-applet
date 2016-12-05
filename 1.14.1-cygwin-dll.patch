@@ -1,0 +1,61 @@
+--- origsrc/mate-indicator-applet-1.14.1/src/applet-main.c	2016-06-20 08:11:25.000000000 -0500
++++ src/mate-indicator-applet-1.14.1/src/applet-main.c	2016-12-02 01:18:53.930259100 -0600
+@@ -38,12 +38,18 @@ with this program.  If not, see <http://
+ 
+ #include "tomboykeybinder.h"
+ 
++#ifdef __CYGWIN__
++#define LIBSO(name) "cyg" name ".dll"
++#else
++#define LIBSO(name) "lib" name ".so"
++#endif
++
+ static gchar * indicator_order[] = {
+-	"libapplication.so",
+-	"libmessaging.so",
+-	"libsoundmenu.so",
+-	"libdatetime.so",
+-	"libsession.so",
++	LIBSO("application"),
++	LIBSO("messaging"),
++	LIBSO("soundmenu"),
++	LIBSO("datetime"),
++	LIBSO("session"),
+ 	NULL
+ };
+ 
+@@ -560,10 +566,6 @@ load_module (const gchar * name, GtkWidg
+ 	g_debug("Looking at Module: %s", name);
+ 	g_return_val_if_fail(name != NULL, FALSE);
+ 
+-	if (!g_str_has_suffix(name, G_MODULE_SUFFIX)) {
+-		return FALSE;
+-	}
+-
+ 	g_debug("Loading Module: %s", name);
+ 
+ 	/* Build the object for the module */
+@@ -586,19 +588,19 @@ load_modules (GtkWidget *menubar, gint *
+ 		gint count = 0;
+ 		while ((name = g_dir_read_name(dir)) != NULL) {
+ #ifdef INDICATOR_APPLET_APPMENU
+-			if (g_strcmp0(name, "libappmenu.so")) {
++			if (g_strcmp0(name, LIBSO("appmenu"))) {
+ 				continue;
+ 			}
+ #else
+-			if (!g_strcmp0(name, "libappmenu.so")) {
++			if (!g_strcmp0(name, LIBSO("appmenu"))) {
+ 				continue;
+ 			}
+ #endif
+ #ifdef INDICATOR_APPLET
+-			if (!g_strcmp0(name, "libme.so")) {
++			if (!g_strcmp0(name, LIBSO("me"))) {
+ 				continue;
+ 			}
+-			if (!g_strcmp0(name, "libdatetime.so")) {
++			if (!g_strcmp0(name, LIBSO("datetime"))) {
+ 				continue;
+ 			}
+ #endif
