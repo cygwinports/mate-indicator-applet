@@ -1,7 +1,7 @@
 inherit mate
 
 NAME="mate-indicator-applet"
-VERSION=1.16.0
+VERSION=1.18.0
 RELEASE=1
 CATEGORY="MATE"
 SUMMARY="Ayatana notifications for MATE panel"
@@ -14,4 +14,4 @@ PATCH_URI="1.14.1-cygwin-dll.patch"
 REQUIRES="indicator-application"
 
 # libexecdir: avoid collisions with gnome-applets
-CYGCONF_ARGS="--libexecdir=/usr/libexec/mate-panel --with-gtk=3.0"
+CYGCONF_ARGS="--libexecdir=/usr/libexec/mate-panel"
